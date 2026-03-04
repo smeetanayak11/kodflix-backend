@@ -54,15 +54,17 @@ if (process.env.DB_SSL === "true") {
 }
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST?.trim(),
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT.trim()) : 3306,
+  user: process.env.DB_USER?.trim(),
+  password: process.env.DB_PASSWORD?.trim(),
+  database: process.env.DB_NAME?.trim(),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: sslConfig
+  ssl: sslConfig,
+  connectTimeout: 30000,
+  acquireTimeout: 30000
 });
 
 export async function initDb() {
