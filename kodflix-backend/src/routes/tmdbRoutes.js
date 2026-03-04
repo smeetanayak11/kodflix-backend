@@ -10,7 +10,7 @@ async function tmdbGet(path, params = {}) {
 
   const res = await axios.get(url, {
     params: {
-      api_key: process.env.TMDB_KEY,
+      api_key: process.env.TMDB_KEY?.trim(),
       language: "en-US",
       ...params
     }

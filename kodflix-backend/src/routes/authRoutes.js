@@ -8,14 +8,14 @@ const SALT_ROUNDS = 10;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 function setAuthCookie(res, payload) {
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET?.trim(), {
     expiresIn: "1d"
   });
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: true,
+    sameSite: "none",
     maxAge: ONE_DAY_MS
   });
 
@@ -132,7 +132,7 @@ router.get("/me", (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET?.trim());
     res.json({ user: decoded });
   } catch {
     res.status(401).json({ message: "Invalid or expired token" });
