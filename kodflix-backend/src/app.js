@@ -39,9 +39,11 @@ app.get("/api/health", (req, res) => {
 app.use("/api", routes);
 
 // Initialize database (non-blocking for Vercel)
-initDb().catch(err => {
-  console.error("Database initialization failed:", err.message);
-});
+if (process.env.DB_HOST) {
+  initDb().catch(err => {
+    console.error("Database initialization failed:", err.message);
+  });
+}
 
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
