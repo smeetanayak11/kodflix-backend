@@ -45,6 +45,12 @@ if (process.env.DB_HOST) {
   });
 }
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Internal Server Error", error: err.message });
+});
+
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`KodFlix API running on port ${PORT}`);
