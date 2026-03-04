@@ -31,9 +31,17 @@ const loginLimiter = rateLimit({
 
 app.use("/api/auth/login", loginLimiter);
 
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 app.use("/api", routes);
 
-await initDb();
+// Initialize database (non-blocking for Vercel)
+initDb().catch(err => {
+  console.error("Database initialization failed:", err.message);
+});
 
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
